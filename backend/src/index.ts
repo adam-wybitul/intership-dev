@@ -79,22 +79,57 @@ app.get('/api/sales-dashboard', (req, res) => {
         }
 
         const deals = filteredDeals.slice(0, 300);
-        const statsPerPerson: Record<string, { totalDeals: number; totalAmount: number }> = {};
+        const statsPerPerson: Record<string, { totalDeals: number; totalAmount: number; dealHistory: {time: number; amount: number}[] }> = {};
         deals.forEach((deal: BusinessCase) => {
             const ownerName = deal.owner.fullName;
             if (!statsPerPerson[ownerName]) {
-                statsPerPerson[ownerName] = {totalDeals: 0, totalAmount: 0};
+                statsPerPerson[ownerName] = {totalDeals: 0, totalAmount: 0, dealHistory: []};
             }
             statsPerPerson[ownerName].totalDeals++;
             statsPerPerson[ownerName].totalAmount += deal.totalAmount || 0;
+
+            const dealDateStr = deal.validFrom || deal['rowInfo.createdAt'];
+            if (dealDateStr) {
+                statsPerPerson[ownerName].dealHistory.push({
+                    time: new Date(dealDateStr).getTime(),
+                    amount: deal.totalAmount || 0
+                });
+            }
         });
 
-        const sortedData = Object.keys(statsPerPerson).map(name => ({
-            name,
-            totalDeals: statsPerPerson[name].totalDeals,
-            totalAmount: statsPerPerson[name].totalAmount,
-            trend: 0
-        })).sort((a, b) => b.totalAmount - a.totalAmount);
+        const sortedData = Object.keys(statsPerPerson).map(name => {
+            const history = statsPerPerson[name].dealHistory.sort((a, b) => a.time - b.time);
+            let trend = 0;
+            const n = history.length;
+            if (n > 1) {
+                let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+                for (let i = 0; i < n; i++) {
+                    const x = i;
+                    const y = history[i].amount;
+                    sumX += x;
+                    sumY += y;
+                    sumXY += x * y;
+                    sumXX += x * x;
+                }
+                const denominator = (n * sumXX) - (sumX * sumX);
+                if (denominator !== 0) {
+                    const slope = ((n * sumXY) - (sumX * sumY)) / denominator;
+                    const averageY = sumY / n;
+                    if (averageY !== 0) {
+                        trend = (slope / averageY) * 100;
+                    } else {
+                        trend = 0;
+                    }
+                }
+            }
+
+            return {
+                name,
+                totalDeals: statsPerPerson[name].totalDeals,
+                totalAmount: statsPerPerson[name].totalAmount,
+                trend: Number(trend.toFixed(2))
+            };
+        }).sort((a, b) => b.totalAmount - a.totalAmount);
 
         const data = sortedData.map((item, index) => ({
             id: index + 1,
