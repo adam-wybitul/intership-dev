@@ -24,10 +24,10 @@ export function OtherPeopleTable({ people, rankOffset = 5 }: OtherPeopleTablePro
           </thead>
           <tbody>
             {people.map((person, index) => (
-              <tr key={person.id}>
+              <tr key={index}>
                 <td>#{rankOffset + index + 1}</td>
                 <td>{person.name}</td>
-                <td>{person.closedDeals}</td>
+                <td>{person.totalDeals}</td>
               </tr>
             ))}
           </tbody>

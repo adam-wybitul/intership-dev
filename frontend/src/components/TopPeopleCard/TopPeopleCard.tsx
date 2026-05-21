@@ -18,7 +18,7 @@ export function TopPeopleCard({ topPeople }: TopPeopleCardProps) {
       ) : (
         <ul className="top-people-list">
           {topPeople.map((person, index) => (
-            <li key={person.id} className="top-people-item">
+            <li key={index} className="top-people-item">
               <span className="top-people-rank">#{index + 1}</span>
               <span className="top-people-name">{person.name}</span>
               <span className="top-people-count">{person.totalDeals} deals</span>
