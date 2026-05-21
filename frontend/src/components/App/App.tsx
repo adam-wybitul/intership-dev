@@ -1,16 +1,13 @@
 import { useState } from 'react';
-import { useFetchData } from '../../hooks/useFetchData';
 import { PeopleFilter, usePeopleDeals } from '../../hooks/usePeopleDeals';
-import { DataTable } from '../DataTable/DataTable';
 import { OtherPeopleTable } from '../OtherPeopleTable/OtherPeopleTable';
 import { Sidebar } from '../Sidebar/Sidebar';
 import { TopPeopleCard } from '../TopPeopleCard/TopPeopleCard';
 import './App.css';
 
 function App() {
-  const { data } = useFetchData();
   const [filter, setFilter] = useState<PeopleFilter>('thisMonth');
-  const { people } = usePeopleDeals(filter);
+  const { people, loading: peopleLoading, error: peopleError } = usePeopleDeals(filter);
 
   const sortedPeople = [...people].sort(
     (a, b) => b.totalDeals - a.totalDeals || a.name.localeCompare(b.name)
@@ -38,9 +35,13 @@ function App() {
             <option value="thisYear">This year</option>
           </select>
         </div>
-        <TopPeopleCard topPeople={topPeople} />
-        <OtherPeopleTable people={otherPeople} rankOffset={topPeople.length} />
-        <DataTable data={data} />
+        <TopPeopleCard topPeople={topPeople} loading={peopleLoading} error={peopleError} />
+        <OtherPeopleTable
+          people={otherPeople}
+          loading={peopleLoading}
+          error={peopleError}
+          rankOffset={topPeople.length}
+        />
       </div>
     </div>
   );

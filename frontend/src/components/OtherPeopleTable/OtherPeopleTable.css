@@ -43,7 +43,42 @@
   border-bottom: none;
 }
 
+.other-people-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #f2f4f7;
+  color: #4b5563;
+}
+
+.other-people-trend.positive {
+  background-color: #e6f6ea;
+  color: #1f7a3d;
+}
+
+.other-people-trend.negative {
+  background-color: #fdecea;
+  color: #b42318;
+}
+
+.other-people-trend.flat {
+  background-color: #eef2f7;
+  color: #475467;
+}
+
 .other-people-empty {
   color: #777;
+  font-size: 14px;
+}
+
+.other-people-error {
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 12px;
+  border-radius: 8px;
   font-size: 14px;
 }

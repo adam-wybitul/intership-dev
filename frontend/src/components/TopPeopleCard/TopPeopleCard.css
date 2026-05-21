@@ -53,6 +53,21 @@
   font-weight: 600;
 }
 
+.top-people-rank.gold {
+  border: 2px solid #d4af37;
+  background-color: #fff7db;
+}
+
+.top-people-rank.silver {
+  border: 2px solid #c0c0c0;
+  background-color: #f4f4f4;
+}
+
+.top-people-rank.bronze {
+  border: 2px solid #cd7f32;
+  background-color: #fff1e6;
+}
+
 .top-people-name {
   flex: 1;
   color: #333;
@@ -68,7 +83,51 @@
   font-weight: 600;
 }
 
+.top-people-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #f2f4f7;
+  color: #4b5563;
+}
+
+.top-people-trend.positive {
+  background-color: #e6f6ea;
+  color: #1f7a3d;
+}
+
+.top-people-trend.negative {
+  background-color: #fdecea;
+  color: #b42318;
+}
+
+.top-people-trend.flat {
+  background-color: #eef2f7;
+  color: #475467;
+}
+
+.top-people-amount {
+  color: #2c3e50;
+  background-color: #e8f0f8;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .top-people-empty {
   color: #777;
+  font-size: 14px;
+}
+
+.top-people-error {
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 12px;
+  border-radius: 8px;
   font-size: 14px;
 }

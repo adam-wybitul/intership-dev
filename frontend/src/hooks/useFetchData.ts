@@ -16,12 +16,16 @@ export interface ApiResponse {
 
 export function useFetchData() {
   const [data, setData] = useState<DataRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const response = await fetch('/api/hello');
       if (!response.ok) {
@@ -30,9 +34,11 @@ export function useFetchData() {
       const result: ApiResponse = await response.json();
       setData(result.dataRows);
     } catch (err) {
-      setData([]);
+      setError('Unable to load business cases.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { data };
+  return { data, loading, error };
 }

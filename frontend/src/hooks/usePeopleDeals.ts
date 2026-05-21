@@ -15,19 +15,23 @@ export interface PeopleDealsResponse {
 
 export type PeopleFilter = 'thisMonth' | 'lastMonth' | 'thisYear';
 
-const PEOPLE_DEALS_API_URL = 'http://localhost:3001/api/sales-dashboard';
+const PEOPLE_DEALS_API_URL = '/api/sales-dashboard';
 
 export function usePeopleDeals(filter: PeopleFilter) {
   const [people, setPeople] = useState<PersonDeal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPeopleDeals();
   }, [filter]);
 
   const fetchPeopleDeals = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      const requestUrl = new URL(PEOPLE_DEALS_API_URL);
-      // requestUrl.searchParams.set('filter', filter);
+      const requestUrl = new URL(PEOPLE_DEALS_API_URL, window.location.origin);
+      requestUrl.searchParams.set('period', filter);
       const response = await fetch(requestUrl.toString());
       if (!response.ok) {
         throw new Error('Failed to fetch people deals');
@@ -35,9 +39,11 @@ export function usePeopleDeals(filter: PeopleFilter) {
       const result: PeopleDealsResponse = await response.json();
       setPeople(result.data);
     } catch (err) {
-      setPeople([]);
+      setError('Unable to load people stats.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { people };
+  return { people, loading, error };
 }
