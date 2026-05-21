@@ -10,7 +10,7 @@ export interface PersonDeal {
 
 export interface PeopleDealsResponse {
   status: string;
-  people: PersonDeal[];
+  data: PersonDeal[];
 }
 
 export type PeopleFilter = 'thisMonth' | 'lastMonth' | 'thisYear';
@@ -33,7 +33,7 @@ export function usePeopleDeals(filter: PeopleFilter) {
         throw new Error('Failed to fetch people deals');
       }
       const result: PeopleDealsResponse = await response.json();
-      setPeople(result.people);
+      setPeople(result.data);
     } catch (err) {
       setPeople([]);
     }
