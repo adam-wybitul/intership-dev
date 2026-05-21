@@ -21,7 +21,8 @@ export function TopPeopleCard({ topPeople }: TopPeopleCardProps) {
             <li key={person.id} className="top-people-item">
               <span className="top-people-rank">#{index + 1}</span>
               <span className="top-people-name">{person.name}</span>
-              <span className="top-people-count">{person.closedDeals} deals</span>
+              <span className="top-people-count">{person.totalDeals} deals</span>
+                <span className="top-people-count">{person.totalAmount} CZK</span>
             </li>
           ))}
         </ul>

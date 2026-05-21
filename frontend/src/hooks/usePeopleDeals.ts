@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export interface PersonDeal {
+  id: number;
   name: string;
   totalDeals: number;
   totalAmount: number;
@@ -8,8 +9,6 @@ export interface PersonDeal {
 }
 
 export interface PeopleDealsResponse {
-  message: string;
-  timestamp: string;
   status: string;
   people: PersonDeal[];
 }
@@ -28,7 +27,7 @@ export function usePeopleDeals(filter: PeopleFilter) {
   const fetchPeopleDeals = async () => {
     try {
       const requestUrl = new URL(PEOPLE_DEALS_API_URL);
-      requestUrl.searchParams.set('filter', filter);
+      // requestUrl.searchParams.set('filter', filter);
       const response = await fetch(requestUrl.toString());
       if (!response.ok) {
         throw new Error('Failed to fetch people deals');
