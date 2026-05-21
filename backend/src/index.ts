@@ -61,12 +61,17 @@ app.get('/api/sales-dashboard', (req, res) => {
             statsPerPerson[ownerName].totalAmount += deal.totalAmount || 0;
         });
 
-        const data = Object.keys(statsPerPerson).map(name => ({
+        const sortedData = Object.keys(statsPerPerson).map(name => ({
             name,
             totalDeals: statsPerPerson[name].totalDeals,
             totalAmount: statsPerPerson[name].totalAmount,
             trend: 0
         })).sort((a, b) => b.totalAmount - a.totalAmount);
+
+        const data = sortedData.map((item, index) => ({
+            id: index + 1,
+            ...item
+        }));
 
         res.json({
             status: 'ok',
