@@ -13,7 +13,7 @@ function App() {
   const { people } = usePeopleDeals(filter);
 
   const sortedPeople = [...people].sort(
-    (a, b) => b.closedDeals - a.closedDeals || a.name.localeCompare(b.name)
+    (a, b) => b.totalDeals - a.totalDeals || a.name.localeCompare(b.name)
   );
   const topPeople = sortedPeople.slice(0, 5);
   const otherPeople = sortedPeople.slice(5);
