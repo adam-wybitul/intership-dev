@@ -48,9 +48,37 @@ app.get('/api/sales-dashboard', (req, res) => {
         const rawData = fs.readFileSync(dataPath, 'utf-8');
         const jsonData: BusinessCaseResponse = JSON.parse(rawData);
 
-        // Process up to 200 deals
-        const deals = jsonData.data.slice(0, 200);
+        const period = req.query.period as string | undefined;
+        let filteredDeals = jsonData.data;
 
+        if (period) {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth();
+
+            filteredDeals = filteredDeals.filter((deal: BusinessCase) => {
+                const dealDateStr = deal.validFrom || deal['rowInfo.createdAt'];
+                if (!dealDateStr) return false;
+
+                const dealDate = new Date(dealDateStr);
+                const dealYear = dealDate.getFullYear();
+                const dealMonth = dealDate.getMonth();
+
+                if (period === 'thisMonth') {
+                    return dealYear === currentYear && dealMonth === currentMonth;
+                } else if (period === 'lastMonth') {
+                    const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+                    const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+                    return dealYear === lastMonthYear && dealMonth === lastMonth;
+                } else if (period === 'thisYear') {
+                    return dealYear === currentYear;
+                }
+
+                return true;
+            });
+        }
+
+        const deals = filteredDeals.slice(0, 300);
         const statsPerPerson: Record<string, { totalDeals: number; totalAmount: number }> = {};
         deals.forEach((deal: BusinessCase) => {
             const ownerName = deal.owner.fullName;
